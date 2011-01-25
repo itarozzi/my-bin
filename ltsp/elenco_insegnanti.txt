@@ -1,0 +1,14 @@
+#LTSP - RiminiLUG
+#File di elenco elaborato dallo script add_teachers.sh
+
+#Elenco degli insegnanti
+
+#nota: non usare spazi nei nomi utente
+#ID;cognome;nome;nome_utente;elenco classi [separati da spazio]
+#-------------------------------------------------
+1;Verdi;Giuseppe;verdi.giuseppe;classe1f
+2;Rossini;Gioacchino;g.rossini;classe1f
+3;;Bach;bach;classe2f
+
+
+

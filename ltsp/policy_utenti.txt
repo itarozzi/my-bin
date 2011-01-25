@@ -1,0 +1,108 @@
+LTSP Scuole - Regole di amministrazione Gruppi e Utenti
+==============================================================
+
+
+Requisiti richiesti
+-------------------
+- Creare un utente per ogni alunno
+- Ogni alunno deve avere la propria home directory a cui solo lui può accedere
+- Creare una directory condivisa a livello di classe, accessibile ad ogni utenti di tale classe
+
+
+Implementazione di base
+-----------------------
+1a - Viene creato un gruppo per ogni classe (predisporre elenco classi)
+1b - Viene creato un ulteriore gruppo "insegnante" per ogni classe :
+	t_<classe>
+1c - Viene creata una directory in home per ogni classe :
+	/home/<classe>		<root>  <classe>	drwxrwx---
+
+1d - Viene creata una directory in home per condivisioni tra insegnanti :
+	/home/teachers		<root>  <teachers>	drwxrwx---
+
+
+2 - Viene creato un utente per ogni insegnante (da file csv)
+  2a - Ogni insegnante viene aggiunto al gruppo teachers (per sabayon)
+  2b - Ogni insegnante viene aggiunto al gruppo t_<classe> di ogni classe in cui insegna
+  2c - La umask per l'utente viene assegnata a 027
+
+3 - Viene creato un utente per ogni alunno (da file csv) con gruppo primario = <classe>
+  3a - La creazione dell'utente avviene tramite script
+  3b - Ogni alunno viene aggiunto al gruppo students (per sabayon)
+  3c - La home directory viene creata con i seguenti permessi:
+         /home/<alunno>		<alunno>  t_<classe>	drwxrwx---	
+  3d - La umask per l'utente viene assegnata a 027
+  3e - Per ogni utente viene creato un link :
+	/home/<alunno>/Scrivania/Classe_<classe> -> /home/<classe>
+
+  
+
+== Note: ==
+- Il gruppo t_classe serve a garantire l'accesso alle home directory degli alunni. Tutti gli insegnanti che insegnano in una classe devono essere aggiunti al gruppo t_<classe>
+
+ 
+Implementazione tecnica
+-----------------------
+Le operazioni sopra descritte vengono eseguite tramite script, sia per facilitare la gestione che (soprattutto) per tener traccia delle modifiche apportate al sistema ed avere un modo per rieseguirle facilmente. Gli script sotto descritti hanno all'interno del nome l'ordine di esecuzione degli stessi.
+Si sceglie di non utilizzare un unico script ma di suddiviserlo in step successivi per avere un maggior controllo e per poter eseguire all'occorrenza solo una parte delle modifiche.
+
+
+NOTA: Eseguire prima le seguenti modifiche manuali:
+
+== file /etc/adduser.conf ==
+- impostare DIR_MODE=0750
+
+== file /etc/profile ==
+- impostare umask 027   
+
+
+
+== 1_create_classes.sh ==
+Occorre passare come parametro il nome della classe, o più classi separati da spazio. 
+
+!!I nomi delle classi NON devono contenere spazi!!! 
+
+Lo script esegui tutte le azioni descritte al punto 1 del precedente paragrafo
+
+
+
+== 2_create_teachers.sh ==
+Occorre passare come parametro il nome del file csv contenente l'elenco degli insegnanti.
+
+Il file dovrà essere formattato con i seguenti campi:
+
+ID;cognome;nome;nome_utente;elenco classi [separati da spazio]
+
+Si consiglia di predisporre l'elenco avvalendosi di un foglio di calcolo (es Calc di OpenOffice), controllare l'assenza di doppioni nei nomi utente ed esportare quindi in formato csv
+
+Il campo ID è un numero incrementale ed univoco. Esso determina l'UID dell'utente sul sistema UID = 2000+ID
+
+Il campo <classe> deve corrispondere esattamente ad uno dei nomi di classe passati allo script crea_classi.sh
+
+Lo script esegui tutte le azioni descritte al punto 2 del precedente paragrafo
+
+
+
+== 3_create_students.sh ==
+Occorre passare come parametro il nome del file csv contenente l'elenco degli studenti.
+
+Il file dovrà essere formattato con i seguenti campi:
+ID;Cognome;Nome;nome_utente;classe
+
+Si consiglia di predisporre l'elenco avvalendosi di un foglio di calcolo (es Calc di OpenOffice), controllare l'assenza di doppioni nei nomi utente ed esportare quindi in formato csv
+
+Il campo ID è un numero incrementale ed univoco. Esso determina l'UID dell'utente sul sistema UID = 3000+ID
+
+Il campo <classe> deve corrispondere esattamente ad uno dei nomi di classe passati allo script crea_classi.sh
+
+Lo script esegui tutte le azioni descritte al punto 3 del precedente paragrafo
+
+
+
+Richieste da fare alla scuola
+-----------------------------
+- Elenco completo delle classi con relativa assegnazione di nome univoco
+- Elenco completo degli insegnanti 
+- Elenco completo degli abbinamenti classe -> insegnante
+- Elenco completo degli alunni, con identificazione della classe di appartenenza
+

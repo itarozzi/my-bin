@@ -1,0 +1,86 @@
+#!/bin/sh
+# =============================================
+# bash snippets
+# =============================================
+
+#=== bash options ===  
+#-n  noexec -> read commands but not execute (check syntax)
+#-u  nounset -> error if undefined variable exists
+#-v verbose -> print commands to stdout
+#-x xtrace -> same as -v, but expands commands
+
+
+
+#===  usage function ===
+usage()
+{
+    echo "--------------------------------------------"
+    echo "usage: ‘basename $0‘ <arg>"
+    exit 1
+}
+
+#=== lockfile ===
+me=$(basename $0)
+lockfile=/tmp/${me}_running.lock
+
+if [ -e $lockfile ]; then
+    exit 1
+fi
+
+lockfile $lockfile 
+...
+rm -rf $lockfile 
+
+#===  test arguments presence ===
+if [ -z "$1" ]; then
+    echo "argument required: <arg>"
+	usage;
+fi
+
+
+#=== Check argument value ===
+case "$1" in
+     "opz1" ) action1;;
+     "opz2" ) action2;;
+     "opz3" ) action3;;
+     "opz4" ) action4;;
+     *        ) usage;;
+esac
+
+
+
+#=== Check all argument values - using shift ===
+until [ -z "$1" ] # Finché ci sono parametri...
+do
+  case "$1" in
+     "opz1" ) action1;;
+     "opz2" ) action2;;
+     *      ) usage;;
+  esac
+   shift
+done
+
+
+#=== block comment ===
+: <<DEBUGXX
+.....
+.....
+DEBUGXX
+
+#=== variable assignement ===
+varname=$( some_command )
+
+
+#=== usefull test ==
+[ -z "$var" ]   -> true if strlen(var) is 0
+[ -n "$var" ]   -> true if strlen(var) is more than 0
+[ "$1" == "str1" -o "$1" == "str2" ]   -> or str comparison
+
+
+
+#=== test command, soppressing output
+mycmd 2>&1>/dev/null
+if [ $? -gt 0 ]; then
+    exit 1 
+else ....; fi
+

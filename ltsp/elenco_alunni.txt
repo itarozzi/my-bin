@@ -1,0 +1,13 @@
+#LTSP - RiminiLUG
+#File di elenco elaborato dallo script add_students.sh
+
+#Elenco degli alunni
+
+#nota: non usare spazi nei nomi utente
+#ID;cognome;nome;nome_utente;classe
+#-------------------------------------------------
+1;alunno1; ;alunno1;classe1f
+2;alunno2; ;alunno2;classe1f
+3;alunno3; ;alunno3;classe2f
+4;Rossi;Paolo;rossi.paolo;classe2f
+

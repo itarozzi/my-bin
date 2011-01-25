@@ -1,0 +1,6 @@
+#!/bin/sh
+export PYTHONPATH="/home/ivan/lilypond/usr/lib/lilypond/current/python:/home/ivan/lilypond/usr/share/lilypond/current/python:$PYTHONPATH"
+export GUILE_LOAD_PATH="/home/ivan/lilypond/usr/share/lilypond/current"
+export LD_LIBRARY_PATH="/home/ivan/lilypond/usr/lib:$LD_LIBRARY_PATH"
+me=`basename $0`
+exec "/home/ivan/lilypond/usr/bin/guile" -e main "/home/ivan/lilypond/usr/bin/$me" "$@"
