@@ -87,15 +87,9 @@ then
 		exit 0
 	else
     FILENAME=$1
-    if [[ $FILENAME  == "" ]]; then
-      FILENAME=/dev/stdin
-    fi
-
 	fi
 else 
-  echo "Errore: Passare il nome del file da processare"
-  echo "Uso: 2_add_teachers.sh [--undo] nomefile.csv"
-  exit 2
+  FILENAME=/dev/stdin
 fi
 
 
@@ -111,6 +105,7 @@ else
 	exit 2
 fi
 
+ERR=""
 while read riga 
 do
   #skip delle righe di commento nel file
@@ -127,11 +122,11 @@ do
 	classi=`echo $riga|awk -F";" {'print $5}'`
 
 
-	if [ -z "$id" ]; then msg_params        $riga 1 1; continue; fi
-	if [ -z "$cognome" ]; then msg_params   $riga 2 0; fi
-	if [ -z "$nome" ]; then msg_params      $riga 3 0; fi
-	if [ -z "$username" ]; then msg_params  $riga 4 1; continue; fi
-	if [ -z "$classi" ]; then msg_params    $riga 5 1; continue; fi
+	if [ -z "$id" ]; then msg_params        $riga 1 1; ERR="1"; continue; fi
+	if [ -z "$cognome" ]; then msg_params   $riga 2 1; ERR="2"; continue; fi
+	if [ -z "$nome" ]; then msg_params      $riga 3 1; ERR="3"; continue; fi
+	if [ -z "$username" ]; then msg_params  $riga 4 1; ERR="4"; continue; fi
+	if [ -z "$classi" ]; then msg_params    $riga 5 1; ERR="5"; continue; fi
 
   # Trasformo il nome utente tutto lowercase
 	username=$(echo $username | tr [:upper:] [:lower:])
@@ -183,6 +178,13 @@ do
 done < "$FILENAME"
 
 			
-echo "----------------------------------------------------"
-echo "Script completato con successo!"
-echo "----------------------------------------------------"
+if [ -z "$ERR" ]; then			
+  echo "----------------------------------------------------"
+  echo "Script completato con successo!"
+  echo "----------------------------------------------------"
+else
+  echo "----------------------------------------------------"
+  echo "Script completato con errore!"
+  echo "----------------------------------------------------"
+  exit 50
+fi
