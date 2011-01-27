@@ -8,6 +8,10 @@
 # v. 1.1 - (it) 21/09/2010 - ivan@riminilug.it
 #		- Aggiungo insegnanti al gruppo $classe
 #		- Consento Info Utente nulle e segnalo lo skip
+# v. 1.2 - (it) 26/01/2011 - ivan@riminilug.it
+#   - possibilità di leggere da stdin (se non uso --undo)
+#   - lo UID non viene più forzato!
+#     (per compatibilità con i vecchi files il campo ID deve essere mantenuto)
 #
 #
 #
@@ -83,6 +87,10 @@ then
 		exit 0
 	else
     FILENAME=$1
+    if [[ $FILENAME  == "" ]]; then
+      FILENAME=/dev/stdin
+    fi
+
 	fi
 else 
   echo "Errore: Passare il nome del file da processare"
@@ -128,12 +136,9 @@ do
   # Trasformo il nome utente tutto lowercase
 	username=$(echo $username | tr [:upper:] [:lower:])
 
-  # Assegno UID = 2000 + ID
-
-  let uid="2000+$id"
  
 	echo "----------------------------------------------------"
-	echo "Aggiungo l'insegnante: $cognome $nome [$username] -> UID $uid"
+	echo "Aggiungo l'insegnante: $cognome $nome [$username] "
 	
 	if  grep -q ^"$username:" /etc/passwd
 	then
@@ -142,7 +147,7 @@ do
 		continue;
 	fi
 
-	adduser  --force-badname --uid $uid --disabled-login --gecos "$cognome $nome"  $username
+	adduser  --force-badname --disabled-login --gecos "$cognome $nome"  $username
 
   #Imposta la password di default
 	#nota!: la password preimpostata corrisponde al nome utente
