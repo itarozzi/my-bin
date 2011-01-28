@@ -1,4 +1,4 @@
-#! /bin/bash
+#! /bin/bash 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
@@ -15,15 +15,20 @@
 # Copyright 2011 Ivan Tarozzi
 #----------------------------------------------------------------------
 
-# |description
+# Test zip files and remove if not readable
 #
 # author: Ivan Tarozzi <itarozzi@gmail.com>
-# date:
+# date: 28/01/2011
 
+[ -z "$1" ] &&	echo "usage: $(basename $0) path"  && exit 1
 
-if [ -z "$1" ]; then
-	echo "argument required: <arg>"
-	exit 1
-fi
-
+for name in  $( find $1)
+do
+  [ ! -f $name ] && echo "skip $name" && continue
+  
+  echo processing $name
+  zip -T $name 2&>/dev/null 
+  [ $? -gt 0 ] && echo "Content error! => remove $name" && rm -f $name
+  
+done
 
