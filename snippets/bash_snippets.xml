@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ROOT item="y" tlversion="1.3.5"
+line0="{*Name*}"
+line1="{*Name*}"
+childtype="DEFAULT">
+<Name type="Text" ref="y">my Snippets</Name>
+<DEFAULT item="y"
+line0="{*Name*}"
+line1="{*Name*}">
+<Name type="Text" ref="y">Headers &amp; License</Name>
+<SNIPPET item="y"
+line0="{*Name*}"
+line1="{*Code*}"
+icon="note">
+<Name type="Text" ref="y">my header with GPL</Name>
+<Code type="Text" required="y" lines="7"># &lt;what it does&gt;
+# Copyright (C) 2011 Ivan Tarozzi
+#
+# &lt;NAME&gt; is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# &lt;NAME&gt; is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this script.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</Code>
+</SNIPPET>
+</DEFAULT>
+<DEFAULT item="y">
+<Name>Bash</Name>
+<SNIPPET item="y">
+<Name>Options</Name>
+<Code>#=== bash options ===  
+#-n  noexec -&gt; read commands but not execute (check syntax)
+#-u  nounset -&gt; error if undefined variable exists
+#-v verbose -&gt; print commands to stdout
+#-x xtrace -&gt; same as -v, but expands commands</Code>
+</SNIPPET>
+<DEFAULT item="y">
+<Name>arguments</Name>
+<SNIPPET item="y">
+<Name>Test1</Name>
+<Code>if [ -z &quot;$1&quot; ]; then
+    echo &quot;argument required: &lt;arg&gt;&quot;
+    exit 1
+fi</Code>
+</SNIPPET>
+<SNIPPET item="y">
+<Name>Test - case</Name>
+<Code>#=== Check argument value ===
+case &quot;$1&quot; in
+     &quot;opz1&quot; ) action1;;
+     &quot;opz2&quot; ) action2;;
+     &quot;opz3&quot; ) action3;;
+     &quot;opz4&quot; ) action4;;
+     *        ) usage;;
+esac</Code>
+</SNIPPET>
+<SNIPPET item="y">
+<Name>Test - shift</Name>
+<Code>argument () {
+  opt=$1
+  shift
+
+  if test $# -eq 0; then
+      echo &quot;$0: option requires an argument -- '$opt'&quot; 1&gt;&amp;2
+      exit 1
+  fi
+  echo $1
+}
+
+# Check the arguments.
+while test $# -gt 0
+do
+    option=$1
+    shift
+
+    case &quot;$option&quot; in
+    -h | --help)
+	usage
+	exit 0 ;;
+    -v | --version)
+	echo &quot;$self (${PACKAGE_NAME}) ${PACKAGE_VERSION}&quot;
+	exit 0 ;;
+
+    --opt1)
+	opt1=`argument $option &quot;$@&quot;`; shift;;
+    --opt1=*)
+	opt1=`echo &quot;$option&quot; | sed 's/--modules=//'` ;;
+
+    --debug)
+	debug=yes ;;
+
+
+    -*)
+	echo &quot;Unrecognized option \`$option'&quot; 1&gt;&amp;2
+	usage
+	exit 1
+	;;
+    *)
+	if test &quot;x$opt_required&quot; != x; then
+	    echo &quot;More than one options?&quot; 1&gt;&amp;2
+	    usage
+	    exit 1
+	fi
+	opt_required=&quot;${option}&quot; ;;
+    esac
+done</Code>
+</SNIPPET>
+<SNIPPET item="y">
+<Name>Usage</Name>
+<Code>usage () {
+    cat &lt;&lt;EOF
+Usage: $self [OPTION] some_arg
+what i do
+
+  -h, --help              print this message and exit
+  -v, --version           print the version information and exit
+EOF
+if [ &quot;${target_cpu}-${platform}&quot; = &quot;i386-pc&quot; ] ; then
+    cat &lt;&lt;EOF
+  --some-option=VALUE    option description
+EOF
+fi</Code>
+</SNIPPET>
+</DEFAULT>
+<DEFAULT item="y">
+<Name>Variables</Name>
+<SNIPPET item="y">
+<Name>Init defaults</Name>
+<Code>prefix=/usr
+exec_prefix=${prefix}
+sbindir=${exec_prefix}/sbin
+bindir=${exec_prefix}/bin
+libdir=${exec_prefix}/lib
+PACKAGE_NAME=
+PACKAGE_TARNAME=
+PACKAGE_VERSION=1.00
+target_cpu=i386
+platform=pc
+host_os=linux-gnu
+${PACKAGE_TARNAME}/${target_cpu}-${platform} | sed ${transform}`
+
+self=`basename $0`</Code>
+</SNIPPET>
+<SNIPPET item="y">
+<Name>Assignement</Name>
+<Code>varname=$( some_command )</Code>
+</SNIPPET>
+<SNIPPET item="y">
+<Name>Tests</Name>
+<Code>[ -z &quot;$var&quot; ]  &amp;&amp; echo &quot;strlen($var) is 0&quot;
+[ -n &quot;$var&quot; ]   &amp;&amp; echo &quot;strlen($var) is more than 0&quot;
+[ &quot;$1&quot; = &quot;str1&quot; -o &quot;$1 = &quot;str2&quot; ]   &amp;&amp; echo &quot;or&quot;</Code>
+</SNIPPET>
+<SNIPPET item="y">
+<Name>Test commands</Name>
+<Code>#=== test command, soppressing output
+mycmd 2&gt;&amp;1&gt;/dev/null
+if [ $? -gt 0 ] ; then
+    exit 1 
+else ....; fi</Code>
+</SNIPPET>
+</DEFAULT>
+<DEFAULT item="y">
+<Name>Comments &amp; debug</Name>
+<SNIPPET item="y">
+<Name>Block comment</Name>
+<Code>: &lt;&lt;DEBUGXX
+.....
+.....
+DEBUGXX</Code>
+</SNIPPET>
+<SNIPPET item="y">
+<Name>Debug option</Name>
+<Code># If the debugging feature is enabled, print commands.
+setup_verbose=
+if test $debug = yes; then
+    set -x
+    setup_verbose=&quot;--verbose&quot;
+fi</Code>
+</SNIPPET>
+</DEFAULT>
+</DEFAULT>
+</ROOT>

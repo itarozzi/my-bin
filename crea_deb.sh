@@ -1,0 +1,1 @@
+/home/ivan/bin/dev/crea_deb.sh
