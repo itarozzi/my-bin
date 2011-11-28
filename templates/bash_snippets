@@ -78,9 +78,13 @@ varname=$( some_command )
 
 
 
-#=== test command, soppressing output
+#=== test command, soppressing output ===
 mycmd 2>&1>/dev/null
 if [ $? -gt 0 ]; then
     exit 1 
 else ....; fi
 
+#=== Assegnare la data corrente ===
+BACKUP_TIME=date +%Y%m%dHHMM
+   oppure
+tar -czvf $(date +%Y%m%dHHMM)_miofile.tgz
