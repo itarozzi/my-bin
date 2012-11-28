@@ -8,9 +8,9 @@
 # al momento lo sostituisco con Xnest
 #Xephyr -keybd ephyr,,,xkbmodel=evdev -br -reset -host-cursor -screen 1280x720x24 -dpi 96 :2 &
 
-Xephyr  -screen 1280x720x24 -dpi 96 :2 &
+#Xephyr  -screen 1280x720x24 -dpi 96 :2 &
 
-#Xnest -full -geometry 1280x720+0+0 -depth 24 -name screencast :3 &
+Xnest -full -geometry 1280x720+0+0 -depth 24 -name screencast :3 &
 
 
 sleep 3
